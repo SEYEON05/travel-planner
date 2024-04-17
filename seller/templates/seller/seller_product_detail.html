@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container py-4 row">
+  <h1 class="mb-3 fw-semibold">{{product.name}}</h1>
+
+  <div class="mb-3 hstack gap-1">
+    <form action="#" class="p-1">
+      <input type="submit" value="수정">
+    </form>
+
+    <form action="{% url 'seller:delete_product' product.pk %}" class="p-1">
+      <input type="submit" value="삭제">
+    </form>
+  </div>
+
+  <img src="{{product.Image_url}}" class="img-fluid mb-3 col-sm-6" alt="{{product.name}}"
+    style="height: 100%; max-width: 400px;">
+  <div class="col-sm-6">
+    <h4 class="fw-semibold">가격: {{product.price}}</h4>
+    <h4 class="fw-semibold">소개:</h4>
+    <p class="fw-semibold">{{product.description}}</p>
+
+  </div>
+</div>
+
+
+
+{% endblock %}

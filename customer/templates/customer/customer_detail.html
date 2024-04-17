@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container py-4 row">
+  <h1 class="mb-3 fw-semibold text-center mb-5">{{product.name}}</h1>
+  <img src="{{product.Image_url}}" class="img-fluid mb-3 col-sm-6" alt="{{product.name}}" style="height: 100%; max-width: 400px;"><!-- 이미지 반응형으로 조정 -->
+  
+<div class="col-sm-6">
+  <h4 class="fw-semibold">가격: {{product.price}}</h4>
+  <h4 class="fw-semibold">소개:</h4>
+  <p class="fw-semibold">{{product.description}}</p>
+
+  <div class="alert alert-info" role="alert"><!-- 수량 표시를 알림 스타일로 변경 -->
+    수량: <span id="currentQuantity">{{product.cart_set.all.0.amount}}</span> 
+  </div>
+
+  <div class="containor">
+  <input type="hidden" id="csrfToken" value="{{csrf_token}}">
+  <button type="button" onclick="modifyCartAmount({{product.pk}}, 1)">담기</button>
+  <button type="button" onclick="modifyCartAmount({{product.pk}}, -1)">빼기</button>
+  </div>
+
+</div>
+<script>
+  function getCsrfToken(){
+        return document.getElementById('csrfToken').value;
+    }
+    function modifyCartAmount(product_pk, change){
+        var xhr = new XMLHttpRequest();
+            xhr.open('POST', '{% url "customer:modify_cart" %}', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.setRequestHeader('X-CSRFToken', getCsrfToken());
+
+            xhr.onload = function() {
+                if (this.status === 200) {
+                    var response = JSON.parse(this.responseText);
+                    document.getElementById('currentQuantity').textContent = response.newQuantity;
+                    console.log('Update successful:', response.message);
+                } else {
+                    console.error('Error updating:', this.statusText);
+                }
+            };
+            xhr.send(`productPK=${product_pk}&amountChange=${change}`);
+    }
+</script>
+{% endblock %}

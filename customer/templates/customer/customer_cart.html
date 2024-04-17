@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+  <h1 class="text-center mb-4 fw-bold">{{user}} 님의 장바구니</h1>
+</div>
+
+<div class="container">
+  {% if product_list %}
+  <div class="row">
+    {% for product in product_list %}
+    <div class="card mx-3 mb-3 col-sm-3" style="width: 18rem;">
+      <a href="{% url 'customer:customer_detail' product.pk %}"><img src="{{product.Image_url}}" class="card-img-top mt-3"
+          alt="{{product.name}}" style="height: 12rem;"></a>
+      <div class="card-body">
+        <h5 class="card-title text-truncate">{{product.name}}</h5>
+        <p class="card-text">{{product.description}}</p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
