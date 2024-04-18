@@ -4,12 +4,15 @@ from django.contrib.auth.decorators import login_required
 from seller.models import *
 from .models import *
 from django.http import JsonResponse
+from django.db.models import Sum
 
 
 def customer_detail(request, pk):
   product = TravelProduct.objects.get(pk=pk)
+  amount_list = [i for i in range(2, 11)]
   context = {
-    'product': product
+    'product': product,
+    'amount_list': amount_list,
   }
   return render(request, 'customer/customer_detail.html', context)
 
@@ -42,8 +45,12 @@ def modify_cart(request):
     # cart.amount가 0보다 작은 경우는 잘못된 요청으로 간주할 수 있습니다.
     return JsonResponse({'message': '잘못된 요청입니다.', 'success': False}, status=400)
   # 변경된 최종 결과를 반환(JSON)
+
+  totalQuantity = request.user.cart_set.aggregate(total_amount=Sum('amount'))['total_amount']
+
   context = {
     'newQuantity':cart.amount,
+    'totalQuantity': totalQuantity,
     'message':'수량이 성공적으로 업데이트됨.',
     'success':True
   }

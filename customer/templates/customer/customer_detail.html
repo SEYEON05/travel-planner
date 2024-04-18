@@ -16,11 +16,22 @@
 
   <div class="containor">
   <input type="hidden" id="csrfToken" value="{{csrf_token}}">
-  <button type="button" onclick="modifyCartAmount({{product.pk}}, 1)">담기</button>
+  <button type="button" onclick="modifyCartAmount({{product.pk}}, {{i}})">담기</button>
   <button type="button" onclick="modifyCartAmount({{product.pk}}, -1)">빼기</button>
   </div>
-
 </div>
+
+<div class="col-auto mb-3">
+  <label class="visually-hidden" for="autoSizingSelect">Preference</label>
+  <select class="form-select mb-3" id="autoSizingSelect">
+    <option selected value="1">1</option>
+    {% for i in amount_list %}
+    <option value="{{i}}">{{i}}</option>
+    {% endfor %}
+  </select>
+<button type="button" onclick="modifyCartAmount({{product.pk}}, {{i}})">담기</button>
+</div>
+
 <script>
   function getCsrfToken(){
         return document.getElementById('csrfToken').value;
